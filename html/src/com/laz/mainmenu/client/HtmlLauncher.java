@@ -8,13 +8,13 @@ import com.laz.mainmenu.MainMenuScratch;
 
 public class HtmlLauncher extends GwtApplication {
 
-        @Override
-        public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(Data.WIDTH, Data.HEIGHT);
-        }
+    @Override
+    public GwtApplicationConfiguration getConfig() {
+        return new GwtApplicationConfiguration(Data.WIDTH, Data.HEIGHT);
+    }
 
-        @Override
-        public ApplicationListener getApplicationListener () {
-                return new MainMenuScratch();
-        }
+    @Override
+    public ApplicationListener getApplicationListener() {
+        return new MainMenuScratch();
+    }
 }

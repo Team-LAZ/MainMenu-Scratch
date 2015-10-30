@@ -4,8 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import com.laz.mainmenu.MainMenuScreen;
-
 //https://github.com/libgdx/libgdx/wiki/Extending-the-simple-game
 
 public class MainMenuScratch extends Game {
@@ -17,6 +15,7 @@ public class MainMenuScratch extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
+        //sets main menu as the default screen
         this.setScreen(new MainMenuScreen(this));
     }
 

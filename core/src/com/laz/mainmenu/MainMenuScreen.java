@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MainMenuScreen implements Screen {
 
     final MainMenuScratch game;
-
     OrthographicCamera camera;
     Stage stage;
     BitmapFont font;
@@ -49,6 +48,7 @@ public class MainMenuScreen implements Screen {
         pixmap.fill();
         skin.add("background", new Texture(pixmap));
 
+        //set look of buttons
         textButtonStyle = new TextButtonStyle();
         textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
         textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
@@ -73,6 +73,7 @@ public class MainMenuScreen implements Screen {
         btnExit.setPosition(Data.WIDTH / 2 - Data.WIDTH / 8, Data.HEIGHT / 2 - 150);
         stage.addActor(btnExit);
 
+        //click listeners for buttons
         btnNewGame.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 newGame();
@@ -93,27 +94,27 @@ public class MainMenuScreen implements Screen {
 
         btnExit.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                Gdx.app.exit(); //closes app when exit button is clicked - no need for exit method
             }
         });
     }
 
+    //called when new game is clicked
     public void newGame() {
-
+        System.out.println("New Game");
     }
 
+    //called when load is clicked
     public void load() {
-
+        System.out.println("Load");
     }
 
+    //called when options is clicked
     public void options() {
-
+        System.out.println("Options");
     }
 
-    public void show() {
-
-    }
-
+    //renders strings and buttons onscreen
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -127,6 +128,11 @@ public class MainMenuScreen implements Screen {
 
         stage.act();
         stage.draw();
+    }
+
+    //various unused methods from implementing Screen class
+    public void show() {
+
     }
 
     public void resize(int width, int height) {

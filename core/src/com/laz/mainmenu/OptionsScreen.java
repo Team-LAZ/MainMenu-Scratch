@@ -1,6 +1,7 @@
 package com.laz.mainmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,10 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-//http://www.tempoparalelo.com/blog/?p=76
-//http://stackoverflow.com/questions/15731944/libgdx-why-is-my-button-not-responding-on-mouseclicks
-
-public class MainMenuScreen implements Screen {
+public class OptionsScreen implements Screen {
 
     final MainMenuScratch game;
     OrthographicCamera camera;
@@ -27,10 +25,16 @@ public class MainMenuScreen implements Screen {
     Skin skin;
     Pixmap pixmap;
     TextButtonStyle textButtonStyle;
-    TextButton btnNewGame, btnLoad, btnOptions, btnExit;
+    TextButton btnSound, btnControls, btnBack;
 
-    public MainMenuScreen(final MainMenuScratch game) {
+    Preferences prefOptions;
+    boolean bSound = true;
+
+    public OptionsScreen(final MainMenuScratch game) {
         this.game = game;
+
+        prefOptions = Gdx.app.getPreferences("options");
+        bSound = prefOptions.getBoolean("sound");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -48,71 +52,66 @@ public class MainMenuScreen implements Screen {
         pixmap.fill();
         skin.add("background", new Texture(pixmap));
 
-        textButtonStyle = new TextButtonStyle();
+        textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
         textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
 
-        btnNewGame = new TextButton("New Game", skin);
-        btnNewGame.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 + 75);
-        stage.addActor(btnNewGame);
+        if (bSound) btnSound = new TextButton("Sound - ON", skin);
+        else btnSound = new TextButton("Sound - OFF", skin);
+        btnSound.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getHeight() / 2 + 75);
+        stage.addActor(btnSound);
 
-        btnLoad = new TextButton("Load", skin);
-        btnLoad.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2);
-        stage.addActor(btnLoad);
+        btnControls = new TextButton("Controls", skin);
+        btnControls.setPosition(Gdx.graphics.getWidth() / 2 + 50, Gdx.graphics.getHeight() / 2 + 75);
+        stage.addActor(btnControls);
 
-        btnOptions = new TextButton("Options", skin);
-        btnOptions.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 - 75);
-        stage.addActor(btnOptions);
+        btnBack = new TextButton("Back", skin);
+        btnBack.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2);
+        stage.addActor(btnBack);
 
-        btnExit = new TextButton("Exit", skin);
-        btnExit.setPosition(Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight() / 2 - 150);
-        stage.addActor(btnExit);
-
-        //click listeners for buttons
-        btnNewGame.addListener(new ClickListener() {
+        btnSound.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                newGame();
+                toggleSound();
             }
         });
 
-        btnLoad.addListener(new ClickListener() {
+        btnControls.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                load();
+                controls();
             }
         });
 
-        btnOptions.addListener(new ClickListener() {
+        btnBack.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                options();
-            }
-        });
-
-        btnExit.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                game.setMainMenuScreen();
             }
         });
     }
 
-    //called when new game is clicked
-    public void newGame() {
-        System.out.println("New Game");
+    public void toggleSound() {
+        if (bSound) {
+            bSound = false;
+            btnSound.setText("Sound - OFF");
+            prefOptions.putBoolean("sound", bSound);
+        } else {
+            bSound = true;
+            btnSound.setText("Sound - ON");
+            prefOptions.putBoolean("sound", bSound);
+        }
+        prefOptions.flush();
     }
 
-    //called when load is clicked
-    public void load() {
-        System.out.println("Load");
+    public void controls() {
+        game.setControlsMenu();
     }
 
-    //called when options is clicked
-    public void options() {
-        System.out.println("Options");
-        game.setOptionsScreen();
+    public void show() {
+
     }
 
-    //renders strings and buttons onscreen
+    @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -121,35 +120,34 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "LAZY KNIGHT", Gdx.graphics.getWidth() / 2 - 45, Gdx.graphics.getHeight() / 2 + 175);
+        game.font.draw(game.batch, "OPTIONS", Gdx.graphics.getWidth() / 2 - 30, Gdx.graphics.getHeight() / 2 + 175);
         game.batch.end();
 
         stage.act();
         stage.draw();
     }
 
-    public void show() {
-
-    }
-
     public void resize(int width, int height) {
 
     }
 
+    @Override
     public void pause() {
 
     }
 
+    @Override
     public void resume() {
 
     }
 
+    @Override
     public void hide() {
 
     }
 
+    @Override
     public void dispose() {
 
     }
 }
-

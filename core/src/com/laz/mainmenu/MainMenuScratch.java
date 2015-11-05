@@ -10,13 +10,30 @@ public class MainMenuScratch extends Game {
 
     public SpriteBatch batch;
     public BitmapFont font;
+    private MainMenuScreen mainMenuScreen;
+    private OptionsScreen optionsScreen;
+    private ControlsScreen controlsScreen;
 
     public void create() {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
-        //sets main menu as the default screen
-        this.setScreen(new MainMenuScreen(this));
+        setMainMenuScreen();
+    }
+
+    public void setMainMenuScreen() {
+        mainMenuScreen = new MainMenuScreen(this);
+        this.setScreen(mainMenuScreen);
+    }
+
+    public void setOptionsScreen() {
+        optionsScreen = new OptionsScreen(this);
+        this.setScreen(optionsScreen);
+    }
+
+    public void setControlsMenu() {
+        controlsScreen = new ControlsScreen(this);
+        this.setScreen(controlsScreen);
     }
 
     public void render() {
